@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM, { createPortal } from 'react-dom';
 
 const App = props => {
     return <BankAccount />;
@@ -15,13 +15,37 @@ class BankAccount extends React.Component {
         }
     }
 
-    increment (){
-        this.setState(
-            { accountBalance: this.state.accountBalance + parseInt(this.state.addAmount) }
-        );
+    shouldComponentUpdate(nextProps, nextState) {
+        if (this.state.addAmount !== nextState.addAmount) {
+          return true;
+        }
+        if (this.state.accountBalance !== nextState.accountBalance) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+
+    componentWillMount() {
+        console.log('componentWillMount');
+    }
+
+    componentDidMount() {
+        console.log('componentDidMount');
+    }
+
+    componentDidUpdate() {
+        console.log('componentDidUpdated!');
+    }
+
+    increment () {
+        this.setState((prevState, props) => ({
+            accountBalance: prevState.accountBalance + parseInt(prevState.addAmount)
+          }));
     }
 
     render ( ) {
+        console.log("Rendered!");
         return (
             <div>
                 <h3>Account Balance: ${this.state.accountBalance}</h3>
